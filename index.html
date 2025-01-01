@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD5 Encryption</title>
+</head>
+<body>
+    <h1>MD5 Encryptor</h1>
+    <form id="md5-form">
+        <label for="input-text">Enter Text:</label>
+        <input type="text" id="input-text" name="input-text" required>
+        <button type="submit">Encrypt</button>
+    </form>
+
+    <h2>Encrypted Data:</h2>
+    <pre id="encrypted-result"></pre>
+
+    <script>
+        document.getElementById('md5-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const inputText = document.getElementById('input-text').value;
+            const md5Hash = CryptoJS.MD5(inputText).toString();
+
+            // Show encrypted result on page
+            document.getElementById('encrypted-result').textContent = md5Hash;
+
+            // Send data to server
+            await fetch('/api/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    original: inputText,
+                    encrypted: md5Hash,
+                    added_time: new Date().toISOString(),
+                    ip_address: '',  // Empty as per request
+                    mac_address: '', // Empty as per request
+                    count: 9999
+                })
+            });
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1-crypto-js.js"></script>
+</body>
+</html>
