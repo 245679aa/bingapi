@@ -1,35 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MD5 Encryptor</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script> <!-- 引入 CryptoJS -->
+    <title>MD5 加密器</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
 </head>
 <body>
-    <h1>MD5 Encryptor</h1>
+    <h1>MD5 加密器</h1>
     <form id="md5-form">
-        <label for="input-text">Enter Text:</label>
+        <label for="input-text">请输入文本：</label>
         <input type="text" id="input-text" name="input-text" required>
-        <button type="submit">Encrypt</button>
+        <button type="submit">加密</button>
     </form>
 
-    <h2>Encrypted Data:</h2>
+    <h2>加密后的数据：</h2>
     <pre id="encrypted-result"></pre>
 
+    <h2>已保存的数据：</h2>
+    <ul id="data-list"></ul>
+
+    <h2>删除数据：</h2>
+    <form id="delete-form">
+        <label for="delete-original">请输入要删除的原始文本：</label>
+        <input type="text" id="delete-original" name="delete-original" required>
+        <button type="submit">删除</button>
+    </form>
+
     <script>
+        // 查询已保存的所有数据
+        async function fetchData() {
+            const response = await fetch('/api/getData');
+            const data = await response.json();
+            const dataList = document.getElementById('data-list');
+            dataList.innerHTML = '';
+
+            if (data && data.length > 0) {
+                data.forEach(item => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `原始文本: ${item.original_text}, 加密文本: ${item.md5_hash}`;
+                    dataList.appendChild(listItem);
+                });
+            } else {
+                dataList.textContent = '没有数据。';
+            }
+        }
+
+        // 加密并提交数据
         document.getElementById('md5-form').addEventListener('submit', async (event) => {
             event.preventDefault();
 
             const inputText = document.getElementById('input-text').value;
-
-            // 确保 CryptoJS 库已加载
             const md5Hash = CryptoJS.MD5(inputText).toString();
-
-            // 显示加密后的结果
             document.getElementById('encrypted-result').textContent = md5Hash;
 
-            // 将数据发送到后端
             await fetch('/api/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -37,12 +61,31 @@
                     original: inputText,
                     encrypted: md5Hash,
                     added_time: new Date().toISOString(),
-                    ip_address: '',  // 留空
-                    mac_address: '', // 留空
+                    ip_address: '',
+                    mac_address: '',
                     count: 9999
                 })
             });
+
+            fetchData(); // 刷新数据列表
         });
+
+        // 删除数据
+        document.getElementById('delete-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const originalText = document.getElementById('delete-original').value;
+
+            await fetch('/api/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ original: originalText })
+            });
+
+            fetchData(); // 刷新数据列表
+        });
+
+        // 页面加载时查询数据
+        window.onload = fetchData;
     </script>
 </body>
 </html>
