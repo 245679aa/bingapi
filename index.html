@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MD5 Encryption</title>
+    <title>MD5 Encryptor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1-crypto-js.js"></script> <!-- 引入 CryptoJS -->
 </head>
 <body>
     <h1>MD5 Encryptor</h1>
@@ -21,12 +22,14 @@
             event.preventDefault();
 
             const inputText = document.getElementById('input-text').value;
+
+            // 确保 CryptoJS 库已加载
             const md5Hash = CryptoJS.MD5(inputText).toString();
 
-            // Show encrypted result on page
+            // 显示加密后的结果
             document.getElementById('encrypted-result').textContent = md5Hash;
 
-            // Send data to server
+            // 将数据发送到后端
             await fetch('/api/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -34,13 +37,12 @@
                     original: inputText,
                     encrypted: md5Hash,
                     added_time: new Date().toISOString(),
-                    ip_address: '',  // Empty as per request
-                    mac_address: '', // Empty as per request
+                    ip_address: '',  // 留空
+                    mac_address: '', // 留空
                     count: 9999
                 })
             });
         });
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1-crypto-js.js"></script>
 </body>
 </html>
