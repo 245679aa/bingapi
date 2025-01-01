@@ -3,8 +3,6 @@
   "version": "1.0.0",
   "description": "MD5 encryption and save to Supabase",
   "scripts": {
-    "dev": "vercel dev",
-    "build": "vercel build",
     "start": "vercel start"
   },
   "dependencies": {
