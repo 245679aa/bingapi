@@ -6,9 +6,14 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
         const { original, encrypted, added_time, ip_address, mac_address, count } = req.body;
 
+        // 检查必填字段
+        if (!original || !encrypted || !added_time || !count) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
         // 插入数据到 Supabase 数据库表
         const { data, error } = await supabase
-            .from('encrypted_data')  // 数据库表名
+            .from('data')  // 数据库表名
             .insert([
                 {
                     original_text: original,  // 存储原始文本
@@ -21,6 +26,7 @@ export default async function handler(req, res) {
             ]);
 
         if (error) {
+            console.error(error);  // 在控制台打印错误信息
             return res.status(400).json({ error: error.message });
         }
 
