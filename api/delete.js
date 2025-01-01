@@ -13,7 +13,7 @@ export default async function handler(req, res) {
         }
 
         const { data, error } = await supabase
-            .from('encrypted_data')
+            .from('data')
             .delete()
             .eq('original_text', original);
 
