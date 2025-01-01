@@ -1,0 +1,21 @@
+{
+  "name": "md5-supabase",
+  "version": "1.0.0",
+  "description": "A simple app to encrypt content using MD5 and save it to Supabase",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0",
+    "crypto-js": "^4.1.1",
+    "next": "13.4.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  }
+}
