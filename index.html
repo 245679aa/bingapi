@@ -254,10 +254,10 @@
             });
 
             const result = await response.json();
-            if (result.success) {
+            if (result.code === 200) {
                 showMessage('删除成功！', 'success');
             } else {
-                showMessage('删除失败！请检查原始文本是否存在。', 'error');
+                showMessage(result.message || '删除失败！请检查原始文本是否存在。', 'error');
             }
 
             fetchData(); // 刷新数据列表
