@@ -6,17 +6,17 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
         const { original, encrypted, added_time, ip_address, mac_address, count } = req.body;
 
-        // Save to Supabase database
+        // 插入数据到 Supabase 数据库表
         const { data, error } = await supabase
-            .from('encrypted_data')
+            .from('encrypted_data')  // 数据库表名
             .insert([
                 {
-                    original,
-                    encrypted,
-                    added_time,
-                    ip_address,
-                    mac_address,
-                    count
+                    original_text: original,  // 存储原始文本
+                    md5_hash: encrypted,      // 存储加密后的文本
+                    created_at: added_time,   // 存储时间戳
+                    ip_address: ip_address,   // 存储 IP 地址
+                    mac_address: mac_address, // 存储 MAC 地址
+                    usage_count: count        // 存储使用次数
                 }
             ]);
 
