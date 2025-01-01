@@ -5,27 +5,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MD5 加密器</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #5a5a5a;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        h2 {
+            color: #444;
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+
+        pre {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 1em;
+            overflow-wrap: break-word;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            background-color: #f4f4f4;
+            margin-bottom: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section input[type="text"] {
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <h1>MD5 加密器</h1>
-    <form id="md5-form">
-        <label for="input-text">请输入文本：</label>
-        <input type="text" id="input-text" name="input-text" required>
-        <button type="submit">加密</button>
-    </form>
+    <div class="container">
+        <h1>MD5 加密器</h1>
 
-    <h2>加密后的数据：</h2>
-    <pre id="encrypted-result"></pre>
+        <!-- 加密表单 -->
+        <div class="form-section">
+            <form id="md5-form">
+                <label for="input-text">请输入文本：</label>
+                <input type="text" id="input-text" name="input-text" required placeholder="输入文本进行加密">
+                <button type="submit">加密</button>
+            </form>
 
-    <h2>已保存的数据：</h2>
-    <ul id="data-list"></ul>
+            <h2>加密后的数据：</h2>
+            <pre id="encrypted-result"></pre>
+        </div>
 
-    <h2>删除数据：</h2>
-    <form id="delete-form">
-        <label for="delete-original">请输入要删除的原始文本：</label>
-        <input type="text" id="delete-original" name="delete-original" required>
-        <button type="submit">删除</button>
-    </form>
+        <!-- 已保存的数据 -->
+        <div class="form-section">
+            <h2>已保存的数据：</h2>
+            <ul id="data-list"></ul>
+        </div>
+
+        <!-- 删除数据 -->
+        <div class="form-section">
+            <form id="delete-form">
+                <label for="delete-original">请输入要删除的原始文本：</label>
+                <input type="text" id="delete-original" name="delete-original" required placeholder="输入要删除的文本">
+                <button type="submit">删除</button>
+            </form>
+        </div>
+    </div>
 
     <script>
         // 查询已保存的所有数据
