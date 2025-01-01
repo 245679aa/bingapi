@@ -24,7 +24,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 90%;
-            max-width: 500px;
+            max-width: 800px;
         }
 
         h1 {
@@ -75,25 +75,25 @@
             margin-top: 20px;
         }
 
-        pre {
-            background-color: #f8f8f8;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 1em;
-            overflow-wrap: break-word;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
 
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        ul li {
-            background-color: #f4f4f4;
-            margin-bottom: 10px;
+        th, td {
             padding: 12px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        td {
+            background-color: #f8f8f8;
         }
 
         .form-section {
@@ -124,7 +124,22 @@
         <!-- 已保存的数据 -->
         <div class="form-section">
             <h2>已保存的数据：</h2>
-            <ul id="data-list"></ul>
+            <table id="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>原始文本</th>
+                        <th>加密文本</th>
+                        <th>添加时间</th>
+                        <th>IP 地址</th>
+                        <th>MAC 地址</th>
+                        <th>次数</th>
+                    </tr>
+                </thead>
+                <tbody id="data-list">
+                    <!-- 数据行将在这里动态添加 -->
+                </tbody>
+            </table>
         </div>
 
         <!-- 删除数据 -->
@@ -147,12 +162,20 @@
 
             if (data && data.length > 0) {
                 data.forEach(item => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = `原始文本: ${item.original_text}, 加密文本: ${item.md5_hash}`;
-                    dataList.appendChild(listItem);
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.id}</td>
+                        <td>${item.original_text}</td>
+                        <td>${item.md5_hash}</td>
+                        <td>${item.created_at}</td>
+                        <td>${item.ip_address || '无'}</td>
+                        <td>${item.mac_address || '无'}</td>
+                        <td>${item.usage_count}</td>
+                    `;
+                    dataList.appendChild(row);
                 });
             } else {
-                dataList.textContent = '没有数据。';
+                dataList.innerHTML = '<tr><td colspan="7" style="text-align: center;">没有数据。</td></tr>';
             }
         }
 
