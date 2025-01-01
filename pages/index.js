@@ -1,68 +1,70 @@
-import { useState } from "react";
-import md5 from "crypto-js/md5";
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { useState } from 'react';
+import md5 from 'crypto-js/md5';
 
 export default function Home() {
-  const [content, setContent] = useState("");
-  const [message, setMessage] = useState("");
+  const [inputData, setInputData] = useState('');
+  const [responseMessage, setResponseMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
-    if (!content) {
-      setMessage("请输入内容！");
-      return;
-    }
+  // 获取用户IP地址（需要通过外部服务获取MAC地址）
+  const getIpAddress = async () => {
+    const response = await fetch('https://api.ipify.org?format=json');
+    const data = await response.json();
+    return data.ip;
+  };
 
-    // MD5 加密
-    const encryptedContent = md5(content).toString();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    // MD5加密
+    const encryptedData = md5(inputData).toString();
+    
+    // 获取IP地址
+    const ipAddress = await getIpAddress();
+    const macAddress = '00:14:22:01:23:45'; // 假设获取到MAC地址
 
-    // 获取时间戳和 IP 地址
-    const timestamp = new Date().toISOString();
-    const ipAddress = await fetch("https://api64.ipify.org?format=json")
-      .then((res) => res.json())
-      .then((data) => data.ip);
+    // 向Supabase提交数据
+    const data = {
+      original_data: inputData,
+      encrypted_data: encryptedData,
+      ip_address: ipAddress,
+      mac_address: macAddress,
+      count: 9999
+    };
 
-    // 默认 MAC 地址（前端无法直接获取）
-    const macAddress = "00:00:00:00:00:00";
-
-    // 保存到 Supabase
-    const { data, error } = await supabase.from("your_table_name").insert([
-      {
-        original_data: content,
-        encrypted_data: encryptedContent,
-        timestamp,
-        ip_address: ipAddress,
-        mac_address: macAddress,
-        count: 9999,
+    // 直接将数据提交到Supabase
+    const response = await fetch('https://YOUR_SUPABASE_URL/rest/v1/encrypted_data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': 'YOUR_SUPABASE_API_KEY',
+        'Authorization': 'Bearer YOUR_SUPABASE_API_KEY',
       },
-    ]);
+      body: JSON.stringify(data),
+    });
 
-    if (error) {
-      setMessage("保存失败：" + error.message);
+    if (response.ok) {
+      setResponseMessage('数据保存成功');
     } else {
-      setMessage("数据已成功保存！");
+      setResponseMessage('保存数据失败');
     }
-
-    setContent("");
+    
+    setLoading(false);
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>MD5 加密工具</h1>
-      <input
-        type="text"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        placeholder="输入内容"
-        style={{ width: "300px", padding: "10px" }}
-      />
-      <button onClick={handleSubmit} style={{ marginLeft: "10px", padding: "10px" }}>
-        提交
-      </button>
-      {message && <p>{message}</p>}
+    <div>
+      <h1>MD5加密并保存数据</h1>
+      <form onSubmit={handleSubmit}>
+        <textarea
+          value={inputData}
+          onChange={(e) => setInputData(e.target.value)}
+          placeholder="输入要加密的内容"
+        />
+        <button type="submit" disabled={loading}>提交</button>
+      </form>
+      {responseMessage && <p>{responseMessage}</p>}
     </div>
   );
 }
