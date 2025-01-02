@@ -27,7 +27,7 @@ export default async function handler(req, res) {
 
             // 如果没有找到匹配的数据
             if (data.length === 0) {
-                return res.status(404).json({ code: 404, message: '没有找到匹配的数据' });
+                return res.status(404).json({ code: 404, message: '没有找到匹配的卡密' });
             }
 
             // 返回查询结果
