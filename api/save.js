@@ -20,7 +20,6 @@ export default async function handler(req, res) {
                     original_text: original,
                     md5_hash: encrypted,
                     created_at: added_time,
-                    ip_address: ip_address,
                     mac_address: mac_address,
                     usage_count: count
                 }
