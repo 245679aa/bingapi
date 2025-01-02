@@ -7,7 +7,7 @@ const supabase = createClient(
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
-        const { original, encrypted, added_time, mac_address, count } = req.body;
+        const { original, encrypted, added_time, mac_address, last_run_time,count } = req.body;
 
         if (!original || !encrypted || !added_time || !count) {
             return res.status(400).json({ error: 'Missing required fields' });
