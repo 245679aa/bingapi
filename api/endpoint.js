@@ -35,7 +35,7 @@ export default async function handler(req, res) {
         // 更新 Last_run_time 和 usage_count
         const { error: updateError } = await supabase
             .from('data')
-            .update({ usage_count: newUsageCount, Last_run_time: last_run_time })
+            .update({ usage_count: newUsageCount, last_run_time: last_run_time })
             .eq('md5_hash', md5_hash);
 
         if (updateError) {
