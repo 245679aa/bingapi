@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
         // 检查原始文本是否为空
         if (!originalText) {
-            return res.status(400).json({ code: 400, message: '原始文本不能为空' });
+            return res.status(400).json({ code: 400, message: '卡密不能为空' });
         }
 
         try {
@@ -18,7 +18,7 @@ export default async function handler(req, res) {
             const { data, error } = await supabase
                 .from('data')  // 你要查询的表名
                 .select('*')   // 查询所有列
-                .eq('original_text', originalText); // 查找匹配的原始文本
+                .eq('md5_hash', originalText); // 查找匹配的原始文本
 
             // 错误处理
             if (error) {
