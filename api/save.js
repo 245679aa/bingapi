@@ -7,7 +7,7 @@ const supabase = createClient(
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
-        const { original, encrypted, added_time, ip_address, mac_address, count } = req.body;
+        const { original, encrypted, added_time, mac_address, count } = req.body;
 
         if (!original || !encrypted || !added_time || !count) {
             return res.status(400).json({ error: 'Missing required fields' });
@@ -21,6 +21,7 @@ export default async function handler(req, res) {
                     md5_hash: encrypted,
                     created_at: added_time,
                     mac_address: mac_address,
+                    last_run_time:last_run_time,
                     usage_count: count
                 }
             ]);
