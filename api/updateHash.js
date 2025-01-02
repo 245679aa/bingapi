@@ -8,13 +8,13 @@ const supabase = createClient(
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
-        const { md5_hash, ip_address, mac_address } = req.body;
+        const { md5_hash, mac_address } = req.body;
 
         // 检查传入参数是否完整
-        if (!md5_hash || !ip_address || !mac_address) {
+        if (!md5_hash || !mac_address) {
             return res.status(400).json({
                 code: 400,
-                message: '参数不完整，请提供 md5_hash, ip_address 和 mac_address'
+                message: '参数不完整，请提供 md5_hash 和 mac_address'
             });
         }
 
@@ -32,10 +32,10 @@ export default async function handler(req, res) {
                 });
             }
 
-            // 更新 ip_address 和 mac_address
+            // 仅更新 mac_address
             const { error: updateError } = await supabase
                 .from('data')
-                .update({ ip_address, mac_address })
+                .update({ mac_address })
                 .eq('md5_hash', md5_hash);
 
             if (updateError) {
